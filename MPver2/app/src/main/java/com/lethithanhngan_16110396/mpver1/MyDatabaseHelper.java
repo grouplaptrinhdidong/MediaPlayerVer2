@@ -32,12 +32,19 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "MPver3";
 
 
+
     // Tên bảng: Note.
     private static final String TABLE_SONG = "Song";
 
     private static final String COLUMN_SONG_ID ="Song_Id";
     private static final String COLUMN_SONG_NAME ="Song_Name";
     private static final String COLUMN_SONG_FILE = "Song_file";
+
+
+    private static final String script = "CREATE TABLE " + TABLE_SONG + "("
+            + COLUMN_SONG_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_SONG_NAME + " TEXT,"
+            + COLUMN_SONG_FILE + " TEXT" + ")";
+
     public MyDatabaseHelper(Context context)  {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -46,15 +53,19 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.i(TAG, "MyDatabaseHelper.onCreate ... ");
-        // Script tạo bảng.
-        String script = "CREATE TABLE " + TABLE_SONG + "("
-                + COLUMN_SONG_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_SONG_NAME + " TEXT,"
-                + COLUMN_SONG_FILE + " TEXT" + ")";
         // Chạy lệnh tạo bảng.
         db.execSQL(script);
        // addSongFromSD();
     }
 
+    public void deleteTable(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SONG);
+    }
+    public void createTable(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(script);
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -188,6 +199,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     }
     public void addSongFromSD() {
 
+        deleteTable();
+        createTable();
         final ArrayList<File> mySongs = findSong(Environment.getExternalStorageDirectory());
 
         for(int i = 0; i < mySongs.size(); i++){

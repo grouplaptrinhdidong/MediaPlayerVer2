@@ -20,6 +20,7 @@
             android:layout_height="match_parent"
             android:iconifiedByDefault="false"
             android:queryHint="Search Here"
+            android:focusable="false"
             android:onClick="findClick"/><!-- set query string of an search view -->
 
 
@@ -55,8 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Button"
-            tools:text="MY SONGS"
+            android:text="MY SONGS"
             android:textColor="@color/colorChuButton"
             android:background="@color/colorNenButton"
             />
