@@ -61,7 +61,7 @@
             android:background="@color/colorNenButton"
             />
 
-        <Button
+        <!--<Button
             android:id="@+id/btnOnline"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -69,14 +69,14 @@
             android:text="Online"
             android:textColor="@color/colorChuButton"
             android:background="@color/colorNenButton"
-            />
+            />-->
 
         <Button
             android:id="@+id/btnBaiHat"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Offline"
+            android:text="Offline songs"
             android:textColor="@color/colorChuButton"
             android:background="@color/colorNenButton"
             />

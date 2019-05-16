@@ -54,7 +54,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <!--<LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
                     android:layout_weight="1"
@@ -79,7 +79,7 @@
                         android:gravity="center_vertical"
                         android:text="   Bai hat"
                         android:textSize="25sp" />
-                </LinearLayout>
+                </LinearLayout>-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -126,7 +126,7 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:scaleType="fitCenter"
-                        android:src="@raw/tbi" />
+                        android:src="@raw/dial1" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -157,7 +157,7 @@
             android:background="@color/colorNenButton"
             />
 
-        <Button
+        <!--<Button
             android:id="@+id/btnOnline"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -165,14 +165,14 @@
             android:text="Online"
             android:textColor="@color/colorChuButton"
             android:background="@color/colorNenButton"
-            />
+            />-->
 
         <Button
             android:id="@+id/btnBaiHat"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Offline"
+            android:text="Offline songs"
             android:textColor="@color/colorChuButton"
             android:background="@color/colorNenButton"
             />

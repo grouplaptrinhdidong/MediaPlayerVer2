@@ -1,5 +1,6 @@
 package com.lethithanhngan_16110396.mpver1;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.lethithanhngan_16110396.mpver1.ListBaiHat;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import com.lethithanhngan_16110396.mpver1.Model.Song;
 import com.lethithanhngan_16110396.mpver1.ListBaiHat;
@@ -47,7 +49,7 @@ public class PlayerActivity extends AppCompatActivity {
     private double startTime = 0;
     private double finalTime = 0;
     public static int oneTimeOnly = 0;
-    public boolean isRepeat = true, isShuffle = true;
+    public boolean isRepeat = false, isShuffle = false;
     private static final int MY_NOTIFICATION_ID = 12345;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,8 +183,56 @@ public class PlayerActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
+                Uri u;
+
+                if(isRepeat==true){
+                    myMediaPlayer.stop();
+                    //position=mySongs.size();
+                    Uri ui = Uri.parse(mySongs.get(position).getSong_File());
+                    myMediaPlayer = MediaPlayer.create(getApplicationContext(), ui);
+                    myMediaPlayer.start();
+                    finalTime = myMediaPlayer.getDuration();
+                    startTime = myMediaPlayer.getCurrentPosition();
+                    txtfinalTime.setText(String.format("%d:%d",
+                            TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
+                            TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                            finalTime))));
+
+                    //position-=1;
+                }else
                 // check if next song is there or not
                 if(position < (mySongs.size() - 1)){
+
+                    if(isShuffle==true){
+                        myMediaPlayer.stop();
+                        Random random= new Random();
+                        int index=random.nextInt(mySongs.size());
+                        if(index==position){
+                            //position=index-1;
+                            index=index-1;
+                        }
+                        position=index;
+                        Intent i = getIntent();
+                        Bundle bundle = i.getExtras();
+                        //mySongs = (ArrayList) bundle.getParcelableArrayList("songs");
+                        snameSong = mySongs.get(index).getSong_Name();
+                        tvSongName.setText(snameSong);
+                        tvSongName.setSelected(true);
+
+                        u = Uri.parse(mySongs.get(index).getSong_File());
+                        myMediaPlayer = MediaPlayer.create(getApplicationContext(), u);
+                        myMediaPlayer.start();
+                        finalTime = myMediaPlayer.getDuration();
+                        startTime = myMediaPlayer.getCurrentPosition();
+                        txtfinalTime.setText(String.format("%d:%d",
+                                TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
+                                TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
+                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                                finalTime))));
+
+
+                    }else {
                     myMediaPlayer.stop();
                     Intent i = getIntent();
                     Bundle bundle = i.getExtras();
@@ -190,7 +240,7 @@ public class PlayerActivity extends AppCompatActivity {
                     snameSong = mySongs.get(position+1).getSong_Name();
                     tvSongName.setText(snameSong);
                     tvSongName.setSelected(true);
-                    Uri u = Uri.parse(mySongs.get(position + 1).getSong_File());
+                    u = Uri.parse(mySongs.get(position + 1).getSong_File());
                     myMediaPlayer = MediaPlayer.create(getApplicationContext(), u);
                     myMediaPlayer.start();
                     showNotification(snameSong);
@@ -203,7 +253,8 @@ public class PlayerActivity extends AppCompatActivity {
                                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
                                             finalTime)))
                     );
-                    position = position + 1;
+                    position = position + 1;}
+
                 }else{
                     // play first song
                     myMediaPlayer.stop();
@@ -213,7 +264,7 @@ public class PlayerActivity extends AppCompatActivity {
                     snameSong = mySongs.get(0).getSong_Name();
                     tvSongName.setText(snameSong);
                     tvSongName.setSelected(true);
-                    Uri u = Uri.parse(mySongs.get(0).getSong_File());
+                    u = Uri.parse(mySongs.get(0).getSong_File());
                     myMediaPlayer = MediaPlayer.create(getApplicationContext(), u);
                     myMediaPlayer.start();
                     showNotification(snameSong);
@@ -285,36 +336,78 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
         imgbtnRepeat.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
             @Override
             public void onClick(View arg0) {
-                if (isRepeat) {
-                    isRepeat = false;
-                    Toast.makeText(getApplicationContext(), "Repeat is OFF", Toast.LENGTH_SHORT).show();
-                    //imgbtnRepeat.setImageResource(R.drawable.repeat);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Repeat is ON", Toast.LENGTH_SHORT).show();
-                    imgbtnRepeat.setImageResource(R.drawable.repeat);
-                    //kiểm tra thanh seekbar đã chạy đến cuối chưa, nếu rồi thì mới chạy lại bài đó từ đầu
-                    while(txtStartTime.getText().toString() == txtfinalTime.getText().toString()) {
-                        // make repeat to true
-                        isRepeat = true;
-
-                        // make shuffle to false
-                        isShuffle = false;
-
-                        //imgbtnShuffle.setImageResource(R.drawable.shuffle);
-                        Uri u = Uri.parse(mySongs.get(position).toString());
-                        myMediaPlayer = MediaPlayer.create(getApplicationContext(), u);
-                        myMediaPlayer.start();
-                        finalTime = myMediaPlayer.getDuration();
-                        startTime = myMediaPlayer.getCurrentPosition();
-                        txtfinalTime.setText(String.format("%d:%d",
-                                TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
-                                TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
-                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
-                                                finalTime)))
-                        );
+                if(isRepeat==false){
+                    if(isShuffle==true){
+                        isShuffle=false;
+                        imgbtnRepeat.setImageResource(R.drawable.repeat);
+                        imgbtnShuffle.setImageResource(R.raw.shuffle);
                     }
+                    imgbtnRepeat.setImageResource(R.drawable.repeat);
+                    isRepeat=true;
+
+                }else {
+                    imgbtnRepeat.setImageResource(R.drawable.repeat);
+                    isShuffle=false;
+                }
+
+
+//                if (!isRepeat) {
+//                    isRepeat = false;
+//                    Toast.makeText(getApplicationContext(), "Repeat is OFF", Toast.LENGTH_SHORT).show();
+//                    //imgbtnRepeat.setImageResource(R.drawable.repeat);
+//                } else {
+//                    Toast.makeText(getApplicationContext(), "Repeat is ON", Toast.LENGTH_SHORT).show();
+//                    imgbtnRepeat.setImageResource(R.drawable.repeat);
+//                    //kiểm tra thanh seekbar đã chạy đến cuối chưa, nếu rồi thì mới chạy lại bài đó từ đầu
+//
+//
+//                    while(txtStartTime.getText().toString() == txtfinalTime.getText().toString()) {
+//
+//                        Log.d("KtraNhe",txtStartTime.getText().toString());
+//                        Log.d("KtraNhe",txtfinalTime.getText().toString());
+//                        // make repeat to true
+//                        isRepeat = true;
+//
+//                        // make shuffle to false
+//                        isShuffle = false;
+//
+//                        //imgbtnShuffle.setImageResource(R.drawable.shuffle);
+//                        Uri u = Uri.parse(mySongs.get(position).toString());
+//                        myMediaPlayer = MediaPlayer.create(getApplicationContext(), u);
+//                        myMediaPlayer.start();
+//                        finalTime = myMediaPlayer.getDuration();
+//                        startTime = myMediaPlayer.getCurrentPosition();
+//                        txtfinalTime.setText(String.format("%d:%d",
+//                                TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
+//                                TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
+//                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+//                                                finalTime)))
+//                        );
+//                    }
+//                }
+            }
+
+
+        });
+        imgbtnShuffle.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onClick(View v) {
+                if(isShuffle==false){
+                    if(isRepeat==true){
+                        isRepeat=false;
+                        imgbtnRepeat.setImageResource(R.raw.replay);
+                        imgbtnShuffle.setImageResource(R.drawable.shuffle);
+                    }
+                    imgbtnShuffle.setImageResource(R.drawable.shuffle);
+                    isShuffle=true;
+
+                }else {
+                    imgbtnShuffle.setImageResource(R.raw.shuffle);
+                    isRepeat=false;
                 }
             }
         });
@@ -367,6 +460,41 @@ public class PlayerActivity extends AppCompatActivity {
             imgbtnPlay.setImageResource(R.mipmap.play);
         }
     }
+
+
+
+//    public void ktra(int startTime, int finalTime) {
+//        if (startTime == finalTime && isShuffle == true) {
+//            if (isShuffle == true) {
+//                myMediaPlayer.stop();
+//                Random random = new Random();
+//                int index = random.nextInt(mySongs.size());
+//                if (index == position) {
+//                    //position=index-1;
+//                    index = index - 1;
+//                }
+//                //position=index;
+//                Intent i = getIntent();
+//                Bundle bundle = i.getExtras();
+//                //mySongs = (ArrayList) bundle.getParcelableArrayList("songs");
+//                snameSong = mySongs.get(index).getSong_Name();
+//                tvSongName.setText(snameSong);
+//                tvSongName.setSelected(true);
+//
+//                Uri u = Uri.parse(mySongs.get(index).getSong_File());
+//                myMediaPlayer = MediaPlayer.create(getApplicationContext(), u);
+//                myMediaPlayer.start();
+//                finalTime = myMediaPlayer.getDuration();
+//                startTime = myMediaPlayer.getCurrentPosition();
+//                txtfinalTime.setText(String.format("%d:%d",
+//                        TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
+//                        TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
+//                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+//                                        finalTime))));
+//            }
+//
+//        }
+//    }
 
 
 }
