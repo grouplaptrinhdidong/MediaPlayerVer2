@@ -14,20 +14,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CaNhan1_Activity" />
-        <activity android:name=".DownloadActivity" />
-        <activity android:name=".Playlist" />
-        <activity android:name=".PlayMusicActivity" />
-        <activity android:name=".ListBaiHat" />
-        <activity android:name=".PlayerActivity" />
-        <activity android:name=".CustomNotification"></activity>
+        <activity android:name=".CaNhan1_Activity" android:launchMode="singleTop"/>
+        <activity android:name=".DownloadActivity" android:launchMode="singleTop"/>
+        <activity android:name=".Playlist" android:launchMode="singleTop"/>
+        <activity android:name=".PlayMusicActivity" android:launchMode="singleTop"/>
+        <activity android:name=".ListBaiHat" android:launchMode="singleTop"/>
+        <activity android:name=".PlayerActivity" android:launchMode="singleTop"/>
+        <activity android:name=".CustomNotification" android:launchMode="singleTop"></activity>
 
         <receiver android:name=".NotificationReceiver">
             <intent-filter>

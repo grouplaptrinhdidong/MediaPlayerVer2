@@ -21,7 +21,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lethithanhngan_16110396.mpver1.ListBaiHat;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
@@ -42,7 +41,7 @@ public class PlayerActivity extends AppCompatActivity {
     Intent intentNofitication;
     Notification.Builder builder ;
     NotificationManager notificationService;
-   public static MediaPlayer myMediaPlayer;
+    public static MediaPlayer myMediaPlayer;
     public  static  int position;
     public  static ArrayList<Song> mySongs = ListBaiHat.listSongs;
     Thread updateSeekBar;

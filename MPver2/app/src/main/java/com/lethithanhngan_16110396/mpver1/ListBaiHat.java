@@ -8,10 +8,12 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ListBaiHat extends AppCompatActivity {
+public class ListBaiHat extends AppCompatActivity implements OnclickList {
     ListView myListViewForSongs;
     String[] items;
     MyDatabaseHelper dbhelper = new MyDatabaseHelper(this);
@@ -40,7 +42,6 @@ public class ListBaiHat extends AppCompatActivity {
         setContentView(R.layout.activity_list_bai_hat);
         myListViewForSongs = (ListView) findViewById(R.id.mySongListView);
 
-        //dbhelper.createDefaultSongIfNeed();
         dbhelper.addSongFromSD();
         display();
 
@@ -49,44 +50,21 @@ public class ListBaiHat extends AppCompatActivity {
     }
     void display(){
 
-
         listSongs = dbhelper.getAllSong();
+
         customAdaper=new CustomAdapter(this,listSongs);
+        customAdaper.registerChildItemClick(this);
         myListViewForSongs.setAdapter(customAdaper);
         customAdaper.notifyDataSetChanged();
-//        items = new String[listSongs.size()];
-//
-//        for (int i=0; i<listSongs.size(); i++){
-//            items[i] = listSongs.get(i).getSong_Name();
-//
-//        }
-
-//        ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, items);
-//        myListViewForSongs.setAdapter(myAdapter);
-
-
-        myListViewForSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String songName =  myListViewForSongs.getItemAtPosition(position).toString();
-                startActivity(new Intent(getApplicationContext(), PlayerActivity.class)/*.putExtra("songs", listSongs)*/
-                        .putExtra("songname",songName)
-                        .putExtra("pos", position));
-            }
-        });
-
 
     }
-//    public void arrayWithIcon(){
-//
-//        myListViewForSongs = (ListView) findViewById(R.id.mySongListView);
-//        listSongs = new ArrayList<>();
-//        /**
-//         * @param MainActivity.this
-//         * @param R.layout.item
-//         * @param bookList
-//         * */
-////        customAdaper = new CustomAdapter(ListBaiHat.this,R.layout.row_songlist,listSongs);
-////        myListViewForSongs.setAdapter(customAdaper);
-//    }
+
+    @Override
+    public void onClickList(String name, int position) {
+                startActivity(new Intent(getApplicationContext(), PlayerActivity.class)
+                .putExtra("songname",name)
+                .putExtra("pos", position));
+    }
+
+
 }
